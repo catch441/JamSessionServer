@@ -1,15 +1,19 @@
 'use strict';
 
+var nameInput = $('#name');
+var roomInput = $('#room-id');
 var usernamePage = document.querySelector('#username-page');
 var chatPage = document.querySelector('#chat-page');
 var usernameForm = document.querySelector('#usernameForm');
-var messageForm = document.querySelector('#messageForm');
-var messageInput = document.querySelector('#message');
-var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
+var roomIdDisplay = document.querySelector('#room-id-display');
 
 var stompClient = null;
+var currentSubscription;
 var username = null;
+var sessionId = null;
+var topic = null;
+var playingSounds = [];
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -17,102 +21,115 @@ var colors = [
 ];
 
 function connect(event) {
-    username = document.querySelector('#name').value.trim();
+  username = nameInput.val().trim();
+  Cookies.set('name', username);
+  if (username) {
+    usernamePage.classList.add('hidden');
+    chatPage.classList.remove('hidden');
 
-    if(username) {
-        usernamePage.classList.add('hidden');
-        chatPage.classList.remove('hidden');
-
-        var socket = new SockJS('/jamsession');
-        stompClient = Stomp.over(socket);
-
-        stompClient.connect({}, onConnected, onError);
-    }
-    event.preventDefault();
+    var socket = new SockJS('/ws');
+    stompClient = Stomp.over(socket);
+    //for debug remove this
+    stompClient.debug = null;
+    stompClient.connect({}, onConnected, onError);
+  }
+  event.preventDefault();
 }
 
+// Leave the current session and enter a new one.
+function enterSession(newSessionId) {
+  sessionId = newSessionId;
+  Cookies.set('sessionId', sessionId);
+  roomIdDisplay.textContent = sessionId;
+  topic = `/app/jamsession/${newSessionId}`;
+
+  if (currentSubscription) {
+    currentSubscription.unsubscribe();
+  }
+  currentSubscription = stompClient.subscribe(`/jamsession/${sessionId}`, onMessageReceived);
+
+  stompClient.send(`${topic}/addUser`,
+    {},
+    JSON.stringify({sender: username, type: 'JOIN'})
+  );
+}
 
 function onConnected() {
-    // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public', onMessageReceived);
-
-    // Tell your username to the server
-    stompClient.send("/app/chat.addUser",
-        {},
-        JSON.stringify({sender: username, type: 'JOIN'})
-    )
-
-    connectingElement.classList.add('hidden');
+  enterSession(roomInput.val());
+  connectingElement.classList.add('hidden');
 }
-
 
 function onError(error) {
-    connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
-    connectingElement.style.color = 'red';
+  connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
+  connectingElement.style.color = 'red';
 }
-
-
-function sendMessage(event) {
-    var messageContent = messageInput.value.trim();
-    if(messageContent && stompClient) {
-        var chatMessage = {
-            sender: username,
-            content: messageInput.value,
-            type: 'CHAT'
-        };
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
-        messageInput.value = '';
-    }
-    event.preventDefault();
-}
-
 
 function onMessageReceived(payload) {
-    var message = JSON.parse(payload.body);
+  var message = JSON.parse(payload.body);
 
-    var messageElement = document.createElement('li');
+  var messageElement = document.createElement('li');
 
-    if(message.type === 'JOIN') {
-        messageElement.classList.add('event-message');
-        message.content = message.sender + ' joined!';
-    } else if (message.type === 'LEAVE') {
-        messageElement.classList.add('event-message');
-        message.content = message.sender + ' left!';
-    } else {
-        messageElement.classList.add('chat-message');
+ if (message.type == 'SOUND') {
+    messageElement.classList.add('event-message');
+    message.content = message.instrument + ' ' + message.tune;
+    playSound.play();
+  }
+}
 
-        var avatarElement = document.createElement('i');
-        var avatarText = document.createTextNode(message.sender[0]);
-        avatarElement.appendChild(avatarText);
-        avatarElement.style['background-color'] = getAvatarColor(message.sender);
+$(document).ready(function() {
+  var savedName = Cookies.get('name');
+  if (savedName) {
+    nameInput.val(savedName);
+  }
 
-        messageElement.appendChild(avatarElement);
+  var savedRoom = Cookies.get('sessionId');
+  if (savedRoom) {
+    roomInput.val(savedRoom);
+  }
 
-        var usernameElement = document.createElement('span');
-        var usernameText = document.createTextNode(message.sender);
-        usernameElement.appendChild(usernameText);
-        messageElement.appendChild(usernameElement);
-    }
+  usernamePage.classList.remove('hidden');
+  usernameForm.addEventListener('submit', connect, true);
+});
 
-    var textElement = document.createElement('p');
-    var messageText = document.createTextNode(message.content);
-    textElement.appendChild(messageText);
+document.addEventListener('keydown', function(event) {
+  if (event.code == 'KeyG') {
+    var soundMessage = {
+      instrument: 'KEYBOARD',
+      tune: 'C',
+      type: 'SOUND'
+      play:'true'
+    };
+    stompClient.send(`${topic}/sendSoundMessage`, {}, JSON.stringify(soundMessage));
+  }
+});
 
-    messageElement.appendChild(textElement);
+document.addEventListener('keyup', function(event) {
+  if (event.code == 'KeyG') {
+    var soundMessage = {
+      instrument: 'KEYBOARD',
+      tune: 'C',
+      type: 'SOUND',
+      play:'false'
+    };
+    stompClient.send(`${topic}/sendSoundMessage`, {}, JSON.stringify(soundMessage));
+  }
+});
 
-    messageArea.appendChild(messageElement);
-    messageArea.scrollTop = messageArea.scrollHeight;
+//sound stuff
+
+function sound(src) {
+  this.sound = document.createElement("audio");
+  this.sound.src = src;
+  this.sound.setAttribute("preload", "auto");
+  this.sound.setAttribute("controls", "none");
+  this.sound.style.display = "none";
+  document.body.appendChild(this.sound);
+  this.play = function(){
+    this.sound.play();
+  }
+  this.stop = function(){
+    this.sound.pause();
+  }
 }
 
 
-function getAvatarColor(messageSender) {
-    var hash = 0;
-    for (var i = 0; i < messageSender.length; i++) {
-        hash = 31 * hash + messageSender.charCodeAt(i);
-    }
-    var index = Math.abs(hash % colors.length);
-    return colors[index];
-}
-
-usernameForm.addEventListener('submit', connect, true)
-messageForm.addEventListener('submit', sendMessage, true)

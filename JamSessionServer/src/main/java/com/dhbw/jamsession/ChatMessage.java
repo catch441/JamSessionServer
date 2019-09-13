@@ -1,22 +1,17 @@
 package com.dhbw.jamsession;
 
+import com.dhbw.jamsession.music.EnumMessageType;
 
 public class ChatMessage {
-    private MessageType type;
+    private EnumMessageType type;
     private String content;
     private String sender;
 
-    public enum MessageType {
-        CHAT,
-        JOIN,
-        LEAVE
-    }
-
-    public MessageType getType() {
+    public EnumMessageType getType() {
         return type;
     }
 
-    public void setType(MessageType type) {
+    public void setType(EnumMessageType type) {
         this.type = type;
     }
 
