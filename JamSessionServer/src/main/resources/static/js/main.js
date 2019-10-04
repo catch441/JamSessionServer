@@ -72,6 +72,7 @@ function onMessageReceived(payload) {
  if (message.type == 'SOUND') {
     messageElement.classList.add('event-message');
     message.content = message.instrument + ' ' + message.tune;
+    var playSound = new sound('1.mp3');
     playSound.play();
   }
 }
@@ -96,14 +97,14 @@ document.addEventListener('keydown', function(event) {
     var soundMessage = {
       instrument: 'KEYBOARD',
       tune: 'C',
-      type: 'SOUND'
+      type: 'SOUND',
       play:'true'
     };
     stompClient.send(`${topic}/sendSoundMessage`, {}, JSON.stringify(soundMessage));
   }
 });
 
-document.addEventListener('keyup', function(event) {
+/*document.addEventListener('keyup', function(event) {
   if (event.code == 'KeyG') {
     var soundMessage = {
       instrument: 'KEYBOARD',
@@ -113,7 +114,7 @@ document.addEventListener('keyup', function(event) {
     };
     stompClient.send(`${topic}/sendSoundMessage`, {}, JSON.stringify(soundMessage));
   }
-});
+});*/
 
 //sound stuff
 
