@@ -1,8 +1,8 @@
-package com.dhbw.jamsession.music;
+package com.dhbw.jamsession.pl;
 
 public enum EnumInstrumentType {
 
-	KEYBOARD(1);
+	DRUM(1);
 	
 	int value;
 	

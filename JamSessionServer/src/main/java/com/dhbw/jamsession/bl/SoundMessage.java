@@ -1,12 +1,17 @@
-package com.dhbw.jamsession.music;
+package com.dhbw.jamsession.bl;
+
+import com.dhbw.jamsession.pl.EnumEffectType;
+import com.dhbw.jamsession.pl.EnumInstrumentType;
+import com.dhbw.jamsession.pl.EnumTuneType;
 
 public class SoundMessage {
 
 	private EnumInstrumentType instrument;
 	private EnumTuneType tune;
+	private EnumEffectType effect;
 	private EnumMessageType type;
 	private boolean play;
-	private String sender;
+	private int id;
 	
 	public SoundMessage() {
 		
@@ -44,11 +49,19 @@ public class SoundMessage {
 		this.play = play;
 	}
 
-	public String getSender() {
-		return sender;
+	public EnumEffectType getEffect() {
+		return effect;
 	}
 
-	public void setSender(String sender) {
-		this.sender = sender;
+	public void setEffect(EnumEffectType effect) {
+		this.effect = effect;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

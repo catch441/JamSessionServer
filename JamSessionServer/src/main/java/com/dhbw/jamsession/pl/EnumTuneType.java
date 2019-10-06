@@ -1,8 +1,15 @@
-package com.dhbw.jamsession.music;
+package com.dhbw.jamsession.pl;
 
 public enum EnumTuneType {
 
-	C(1),
+	crash(0),
+	hithat(1),
+	kick(2),
+	snaer(3),
+	tom(4);
+	
+	
+	/*C(1),
 	D(2),
 	E(3),
 	F(4),
@@ -49,7 +56,7 @@ public enum EnumTuneType {
 	DIS_ES_3(40),
 	FIS_GES_3(41),
 	GIS_AS_3(42),
-	AIS_B_3(43);
+	AIS_B_3(43);*/
 	
 	int value;
 	

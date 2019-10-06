@@ -1,4 +1,4 @@
-package com.dhbw.jamsession;
+package com.dhbw.jamsession.bl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +9,6 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-
-import com.dhbw.jamsession.music.EnumMessageType;
 
 @Component
 public class WebSocketEventListener {

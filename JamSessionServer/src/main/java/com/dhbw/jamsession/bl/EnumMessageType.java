@@ -1,4 +1,4 @@
-package com.dhbw.jamsession.music;
+package com.dhbw.jamsession.bl;
 
 public enum EnumMessageType {
 

@@ -1,6 +1,4 @@
-package com.dhbw.jamsession;
-
-import com.dhbw.jamsession.music.EnumMessageType;
+package com.dhbw.jamsession.bl;
 
 public class ChatMessage {
     private EnumMessageType type;

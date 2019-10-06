@@ -1,4 +1,4 @@
-package com.dhbw.jamsession.controller;
+package com.dhbw.jamsession.bl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,11 +9,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
-
-import com.dhbw.jamsession.ChatMessage;
-import com.dhbw.jamsession.WebSocketEventListener;
-import com.dhbw.jamsession.music.EnumMessageType;
-import com.dhbw.jamsession.music.SoundMessage;
 
 @Controller
 public class SessionController {

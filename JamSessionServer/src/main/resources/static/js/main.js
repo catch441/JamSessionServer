@@ -11,9 +11,9 @@ var roomIdDisplay = document.querySelector('#room-id-display');
 var stompClient = null;
 var currentSubscription;
 var username = null;
+var passwordHash = null;
 var sessionId = null;
 var topic = null;
-var playingSounds = [];
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
@@ -27,7 +27,7 @@ function connect(event) {
     usernamePage.classList.add('hidden');
     chatPage.classList.remove('hidden');
 
-    var socket = new SockJS('/ws');
+    var socket = new WebSocket("ws://localhost:8080/ws")
     stompClient = Stomp.over(socket);
     //for debug remove this
     stompClient.debug = null;
@@ -39,7 +39,11 @@ function connect(event) {
 // Leave the current session and enter a new one.
 function enterSession(newSessionId) {
   sessionId = newSessionId;
+  //das ist wichtig, dass hier der session name in den cookie gesetzt wird
   Cookies.set('sessionId', sessionId);
+  //das passwort hier muss dann beim Erstellen der Session eingegeben werden und hier gehasht werden
+  passwordHash = 'temp';
+  Cookies.set('sessionPasswordHash', passwordHash);
   roomIdDisplay.textContent = sessionId;
   topic = `/app/jamsession/${newSessionId}`;
 
@@ -72,6 +76,7 @@ function onMessageReceived(payload) {
  if (message.type == 'SOUND') {
     messageElement.classList.add('event-message');
     message.content = message.instrument + ' ' + message.tune;
+    var playSound = new sound('1.mp3');
     playSound.play();
   }
 }
@@ -94,16 +99,17 @@ $(document).ready(function() {
 document.addEventListener('keydown', function(event) {
   if (event.code == 'KeyG') {
     var soundMessage = {
-      instrument: 'KEYBOARD',
-      tune: 'C',
-      type: 'SOUND'
-      play:'true'
+      instrument: 'DRUM',
+      tune: 'tom',
+      type: 'SOUND',
+      play:'true',
+      id: Math.random() * 200
     };
     stompClient.send(`${topic}/sendSoundMessage`, {}, JSON.stringify(soundMessage));
   }
 });
 
-document.addEventListener('keyup', function(event) {
+/*document.addEventListener('keyup', function(event) {
   if (event.code == 'KeyG') {
     var soundMessage = {
       instrument: 'KEYBOARD',
@@ -113,7 +119,7 @@ document.addEventListener('keyup', function(event) {
     };
     stompClient.send(`${topic}/sendSoundMessage`, {}, JSON.stringify(soundMessage));
   }
-});
+});*/
 
 //sound stuff
 
@@ -131,5 +137,3 @@ function sound(src) {
     this.sound.pause();
   }
 }
-
-
