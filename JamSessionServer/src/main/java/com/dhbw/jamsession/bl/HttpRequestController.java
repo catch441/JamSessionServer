@@ -1,6 +1,7 @@
 package com.dhbw.jamsession.bl;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,7 +30,7 @@ public class HttpRequestController {
 	}
 	
 	//adds sounds to a player in a JamSession
-	@PostMapping("/jamSessionSounds\"")
+	@PostMapping("/jamSessionSounds")
 	public void addSoundsToPlayer(@RequestParam String jamSessionName, @RequestParam String player,@RequestBody List<SoundFileId> sounds) {
 		JamSession session = JamSession.getJamSessionByName(jamSessionName);
 		if(session.hasPlayer(player)) {
@@ -39,7 +40,15 @@ public class HttpRequestController {
 		}
 	}
 	
-	//get all sessions
+	//returns all active session names
+	@GetMapping("/jamSessions")
+	public List<String> getAllSessions() {
+		List<String> list = new ArrayList<String>();
+		for(JamSession session:JamSession.getJamSessions()) {
+			list.add(session.getSessionName());
+		}
+		return list;
+	}
 	
 	//get all effects
 	
