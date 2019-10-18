@@ -1,12 +1,11 @@
 package com.dhbw.jamsession.bl;
 
-import java.io.File;
+import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioFormat.Encoding;
-import javax.sound.sampled.AudioInputStream;
+import java.util.Map;
 
 import com.dhbw.jamsession.exception.JamSessionException;
 import com.dhbw.jamsession.pl.SoundFile;
@@ -14,62 +13,66 @@ import com.dhbw.jamsession.pl.SoundFileId;
 import com.dhbw.jamsession.sl.ServiceManager;
 import com.dhbw.jamsession.sl.SoundService;
 
-public class JamSession {
-	
+public class JamSession implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static List<JamSession> jamSessions = new ArrayList<JamSession>();
-	
+
 	public static void createNewJamSession(String name, String passwordhash, String leader) {
-		for(JamSession session:jamSessions) {
-			if(session.getSessionName().equals(name)) {
+		for (JamSession session : jamSessions) {
+			if (session.getSessionName().equals(name)) {
 				throw new JamSessionException("This session name already exists!");
 			}
 		}
 		JamSession session = new JamSession(name, passwordhash, leader);
 		jamSessions.add(session);
 	}
-	
+
 	public static void deleteJamSession(String name, String passwordhash, String leader) {
 		JamSession jamSession = null;
-		for(JamSession session:jamSessions) {
-			if(session.getSessionName().equals(name) && session.getPlayer(leader).isLeader()) {
+		for (JamSession session : jamSessions) {
+			if (session.getSessionName().equals(name) && session.getPlayer(leader).isLeader()) {
 				jamSession = session;
 			}
 		}
-		if(jamSession != null) {
+		if (jamSession != null) {
 			jamSessions.remove(jamSession);
 		} else {
 			throw new JamSessionException("Error on deleting this jamSession!");
 		}
 	}
-	
+
 	public static boolean sessionExists(String name) {
-		for(JamSession session:jamSessions) {
-			if(session.getSessionName().equals(name)) {
+		for (JamSession session : jamSessions) {
+			if (session.getSessionName().equals(name)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	public static JamSession getJamSessionByName(String name) {
-		for(JamSession session:jamSessions) {
-			if(session.getSessionName().equals(name)) {
+		for (JamSession session : jamSessions) {
+			if (session.getSessionName().equals(name)) {
 				return session;
 			}
 		}
 		throw new JamSessionException("No JamSession found!");
 	}
-	
+
 	public static List<JamSession> getJamSessions() {
 		return jamSessions;
 	}
-	
+
 	private String sessionName;
 	private String passwordhash;
 	private List<Player> players;
 	private List<SoundFile> soundFiles;
-	
-	public JamSession(String sessionName, String passwordhash,String leader) {
+
+	public JamSession(String sessionName, String passwordhash, String leader) {
 		players = new ArrayList<>();
 		soundFiles = new ArrayList<>();
 		setSessionName(sessionName);
@@ -84,88 +87,89 @@ public class JamSession {
 	public void setSessionName(String sessionName) {
 		this.sessionName = sessionName;
 	}
-	
+
 	public int getSessionPlayerSize() {
 		return players.size();
 	}
-	
+
 	public boolean hasPlayer(String name) {
-		for(Player player:players) {
-			if(player.getName().equals(name)) {
+		for (Player player : players) {
+			if (player.getName().equals(name)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	public void addPlayer(String name) {
-		for(Player player:players) {
-			if(player.getName().equals(name)) {
+		for (Player player : players) {
+			if (player.getName().equals(name)) {
 				throw new JamSessionException("This player is already in this session!");
 			}
 		}
 		players.add(new Player(name, false));
 	}
-	
+
 	public Player getPlayer(String name) {
-		for(Player player:players) {
-			if(player.getName().equals(name)) {
+		for (Player player : players) {
+			if (player.getName().equals(name)) {
 				return player;
 			}
 		}
 		throw new JamSessionException("No player found!");
 	}
-	
+
 	public void removePlayer(String name) {
 		Player player = null;
-		for(Player p:players) {
-			if(p.getName().equals(name)) {
+		for (Player p : players) {
+			if (p.getName().equals(name)) {
 				player = p;
 			}
 		}
-		if(player != null) {
+		if (player != null) {
 			players.remove(player);
 		} else {
 			throw new JamSessionException("This player is not in this session!");
 		}
 	}
-	
+
 	public void addSoundsToSessionPlayer(String name, List<SoundFileId> sounds) {
-		for(SoundFileId id:sounds) {
+		for (SoundFileId id : sounds) {
 			boolean exists = false;
-			for(SoundFile soundFile:soundFiles) {
-				if(!exists && soundFile.getId().equals(id)) {
+			for (SoundFile soundFile : soundFiles) {
+				if (!exists && soundFile.getId().equals(id)) {
 					exists = true;
 				}
 			}
 			Player player = getPlayer(name);
-			if(player.getSounds().contains(id)) {
+			if (player.getSounds().contains(id)) {
 				throw new JamSessionException("This player has already this sound!");
 			} else {
-				if(!exists) {
-					soundFiles.add(ServiceManager.getService(SoundService.class).getSoundById(id.getInstrumentType(), id.getTuneType(), id.getEffect()));
+				if (!exists) {
+					soundFiles.add(ServiceManager.getService(SoundService.class).getSoundById(id.getInstrumentType(),
+							id.getPitchType(), id.getEffect()));
 					player.getSounds().add(id);
 				} else {
 					throw new JamSessionException("This sound is already used!");
 				}
-				
-			}	
+
+			}
 		}
 	}
-	
+
 	public void removeSoundsFromSessionPlayer(String name, List<SoundFileId> sounds) {
-		for(SoundFileId id:sounds) {
+		for (SoundFileId id : sounds) {
 			boolean exists = false;
-			for(SoundFile soundFile:soundFiles) {
-				if(!exists && soundFile.getId().equals(id)) {
+			for (SoundFile soundFile : soundFiles) {
+				if (!exists && soundFile.getId().equals(id)) {
 					exists = true;
 				}
 			}
 			Player player = getPlayer(name);
-			if(exists && !player.getSounds().contains(id)) {
+			if (exists && !player.getSounds().contains(id)) {
 				throw new JamSessionException("This player doesn't have this sound!");
-			} else if(exists){
-				player.getSounds().remove(id);			
+			} else if (exists) {
+				player.getSounds().remove(id);
 			} else {
 				throw new JamSessionException("This session doesn't have this sound!");
 			}
@@ -180,13 +184,19 @@ public class JamSession {
 		this.passwordhash = passwordhash;
 	}
 
-	public List<AudioInputStream> getSoundFilesForClient() {
-		List<AudioInputStream> files = new ArrayList<>();
-        AudioFormat audioFormat = new AudioFormat(Encoding.ULAW, 48000, 16, 1, frameSize, 50, true);
-		for(SoundFile sound:soundFiles) {
-			AudioInputStream stream = new AudioInputStream(sound.getFile().getBinaryStream(), audioFormat, length);
-			files.add(stream);
+	public Map<String, byte[]> getSoundFilesForClient() {
+		Map<String, byte[]> map = new HashMap<String, byte[]>();
+		for (SoundFile sound : soundFiles) {
+			try {
+				map.put(sound.getId().getInstrumentType().name() + "-" + sound.getId().getPitchType().name() + "-"
+						+ sound.getId().getEffect().name(),
+						sound.getFile().getBytes(1, (int) sound.getFile().length()));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		return files;
+		return map;
+		// return files;
 	}
 }

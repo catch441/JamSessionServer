@@ -1,0 +1,78 @@
+package com.dhbw.jamsession.pl;
+
+public enum EnumPitchType {
+
+	CRASH(0),
+	HITHAT(1),
+	KICK(2),
+	SNAER(3),
+	TOM(4),
+	
+	C_1(8),
+	D_1(9),
+	E_1(10),
+	F_1(11),
+	G_1(12),
+	A_1(13),
+	H_1(14),
+	C_2(15),
+	D_2(16),
+	E_2(17),
+	F_2(18),
+	G_2(19),
+	A_2(20),
+	H_2(21),
+	C_3(22),
+	D_3(23),
+	E_3(24),
+	F_3(25),
+	G_3(26),
+	A_3(27),
+	H_3(28),
+	C_4(29),
+	D_4(30),
+	E_4(31),
+	F_4(32),
+	G_4(34),
+	A_4(35),
+	H_4(36),
+	C_5(37),
+	D_5(38),
+	E_5(39),
+	F_5(40),
+	G_5(41),
+	A_5(42),
+	H_5(43),
+	
+	CIS_DES_1(44),
+	DIS_ES_1(45),
+	FIS_GES_1(46),
+	GIS_AS_1(47),
+	AIS_B_1(48),
+	CIS_DES_2(49),
+	DIS_ES_2(50),
+	FIS_GES_2(51),
+	GIS_AS_2(52),
+	AIS_B_2(53),
+	CIS_DES_3(54),
+	DIS_ES_3(55),
+	FIS_GES_3(56),
+	GIS_AS_3(57),
+	AIS_B_3(58),
+	CIS_DES_4(59),
+	DIS_ES_4(60),
+	FIS_GES_4(61),
+	GIS_AS_4(62),
+	AIS_B_4(63),
+	CIS_DES_5(64),
+	DIS_ES_5(65),
+	FIS_GES_5(66),
+	GIS_AS_5(67),
+	AIS_B_5(68);
+	
+	int value;
+	
+	EnumPitchType(int value) {
+		this.value = value;
+	}
+}

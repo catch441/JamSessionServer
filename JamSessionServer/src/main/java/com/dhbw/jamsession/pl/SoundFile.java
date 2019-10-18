@@ -1,6 +1,5 @@
 package com.dhbw.jamsession.pl;
 
-import java.io.File;
 import java.sql.Blob;
 
 import javax.persistence.Column;

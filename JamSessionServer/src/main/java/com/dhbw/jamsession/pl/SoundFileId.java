@@ -18,7 +18,7 @@ public class SoundFileId implements Serializable{
 	
 	@Column(name = "tune")
 	@Enumerated(EnumType.STRING)
-	private EnumTuneType tuneType;
+	private EnumPitchType pitchType;
 	
 	@Column(name = "instrumental_type")
 	@Enumerated(EnumType.STRING)
@@ -28,10 +28,10 @@ public class SoundFileId implements Serializable{
 		
 	}
 	
-	public SoundFileId(EnumEffectType effect,EnumTuneType tune, EnumInstrumentType instrumentType) {
+	public SoundFileId(EnumEffectType effect,EnumPitchType pitchType, EnumInstrumentType instrumentType) {
 		setEffect(effect);
 		setInstrumentType(instrumentType);
-		setTuneType(tune);
+		setPitchType(pitchType);
 	}
 
 	public EnumEffectType getEffect() {
@@ -42,12 +42,12 @@ public class SoundFileId implements Serializable{
 		this.effect = effect;
 	}
 
-	public EnumTuneType getTuneType() {
-		return tuneType;
+	public EnumPitchType getPitchType() {
+		return pitchType;
 	}
 
-	public void setTuneType(EnumTuneType tuneType) {
-		this.tuneType = tuneType;
+	public void setPitchType(EnumPitchType pitchType) {
+		this.pitchType = pitchType;
 	}
 
 	public EnumInstrumentType getInstrumentType() {

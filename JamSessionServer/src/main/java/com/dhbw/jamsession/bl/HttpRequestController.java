@@ -1,8 +1,8 @@
 package com.dhbw.jamsession.bl;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dhbw.jamsession.exception.JamSessionException;
+import com.dhbw.jamsession.pl.EnumEffectType;
+import com.dhbw.jamsession.pl.EnumInstrumentType;
+import com.dhbw.jamsession.pl.EnumPitchType;
 import com.dhbw.jamsession.pl.SoundFileId;
 
 import io.swagger.annotations.ApiOperation;
@@ -23,7 +26,7 @@ public class HttpRequestController {
 	//returns all soundfiles for a JamSession
 	@ApiOperation(value = "returns all soundfiles for a JamSession")
 	@GetMapping("/jamSessionSounds")
-	public List<File> getSessionSoundFiles(@RequestParam String jamSessionName, @RequestParam String player) {
+	public Map<String, byte[]> getSessionSoundFiles(@RequestParam String jamSessionName, @RequestParam String player) {
 		JamSession session = JamSession.getJamSessionByName(jamSessionName);
 		if(session.hasPlayer(player)) {
 			return session.getSoundFilesForClient();
@@ -55,10 +58,26 @@ public class HttpRequestController {
 		return list;
 	}
 	
-	//get all effects
+	//returns all active session names
+	@ApiOperation(value = "returns all available effects")
+	@GetMapping("/effects")
+	public EnumEffectType[] getAllEffects() {
+		return EnumEffectType.values();
+	}
 	
-	//get all instruments
+	//returns all available instruments
+	@ApiOperation(value = "returns all available instruments")
+	@GetMapping("/instruments")
+	public EnumInstrumentType[] getAllInstruments() {
+		return EnumInstrumentType.values();
+	}
 	
-	//get all tunes
+	//returns all available pitches
+	@ApiOperation(value = "returns all available pitches")
+	@GetMapping("/pitches")
+	public EnumPitchType[] getAllPitches() {
+		return EnumPitchType.values();
+	}
+		
 	
 }

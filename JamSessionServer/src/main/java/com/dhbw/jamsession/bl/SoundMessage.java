@@ -2,12 +2,12 @@ package com.dhbw.jamsession.bl;
 
 import com.dhbw.jamsession.pl.EnumEffectType;
 import com.dhbw.jamsession.pl.EnumInstrumentType;
-import com.dhbw.jamsession.pl.EnumTuneType;
+import com.dhbw.jamsession.pl.EnumPitchType;
 
 public class SoundMessage {
 
 	private EnumInstrumentType instrument;
-	private EnumTuneType tune;
+	private EnumPitchType tune;
 	private EnumEffectType effect;
 	private EnumMessageType type;
 	private boolean play;
@@ -25,11 +25,11 @@ public class SoundMessage {
 		this.instrument = instrument;
 	}
 
-	public EnumTuneType getTune() {
+	public EnumPitchType getTune() {
 		return tune;
 	}
 
-	public void setTune(EnumTuneType tune) {
+	public void setTune(EnumPitchType tune) {
 		this.tune = tune;
 	}
 
