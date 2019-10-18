@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dhbw.jamsession.exception.JamSessionException;
 import com.dhbw.jamsession.pl.SoundFileId;
 
+import io.swagger.annotations.ApiOperation;
+
 @CrossOrigin
 @RestController
 public class HttpRequestController {
 
 	//returns all soundfiles for a JamSession
+	@ApiOperation(value = "returns all soundfiles for a JamSession")
 	@GetMapping("/jamSessionSounds")
 	public List<File> getSessionSoundFiles(@RequestParam String jamSessionName, @RequestParam String player) {
 		JamSession session = JamSession.getJamSessionByName(jamSessionName);
@@ -30,6 +33,7 @@ public class HttpRequestController {
 	}
 	
 	//adds sounds to a player in a JamSession
+	@ApiOperation(value = "adds sounds to a player in a JamSession")
 	@PostMapping("/jamSessionSounds")
 	public void addSoundsToPlayer(@RequestParam String jamSessionName, @RequestParam String player,@RequestBody List<SoundFileId> sounds) {
 		JamSession session = JamSession.getJamSessionByName(jamSessionName);
@@ -41,6 +45,7 @@ public class HttpRequestController {
 	}
 	
 	//returns all active session names
+	@ApiOperation(value = "returns all active session names")
 	@GetMapping("/jamSessions")
 	public List<String> getAllSessions() {
 		List<String> list = new ArrayList<String>();

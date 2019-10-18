@@ -28,15 +28,19 @@ public class WebSocketEventListener {
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
     String username = (String) headerAccessor.getSessionAttributes().get("username");
-    String sessionId = (String) headerAccessor.getSessionAttributes().get("session_id");
+    String sessionId = (String) headerAccessor.getSessionAttributes().get("sessionId");
     if (username != null) {
       logger.info("User Disconnected: " + username);
-
-      ChatMessage chatMessage = new ChatMessage();
-      chatMessage.setType(EnumMessageType.LEAVE);
-      chatMessage.setSender(username);
-
-      messagingTemplate.convertAndSend("/jamsession/" + sessionId, chatMessage);
+      JamSession session = JamSession.getJamSessionByName(sessionId);
+      session.removePlayer(username);
+      if(session.getSessionPlayerSize() == 0) {
+    	  JamSession.getJamSessions().remove(session);
+      } else {
+    	  ChatMessage chatMessage = new ChatMessage();
+          chatMessage.setType(EnumMessageType.LEAVE);
+          chatMessage.setSender(username);
+          messagingTemplate.convertAndSend("/jamsession/" + sessionId, chatMessage);
+      }
     }
   }
 }

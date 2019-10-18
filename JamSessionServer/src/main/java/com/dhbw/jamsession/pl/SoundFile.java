@@ -1,6 +1,7 @@
 package com.dhbw.jamsession.pl;
 
 import java.io.File;
+import java.sql.Blob;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -15,7 +16,7 @@ public class SoundFile {
 	private SoundFileId id;
 
 	@Column(name = "file")
-	private File file;
+	private Blob file;
 
 	public SoundFileId getId() {
 		return id;
@@ -25,11 +26,11 @@ public class SoundFile {
 		this.id = id;
 	}
 
-	public File getFile() {
+	public Blob getFile() {
 		return file;
 	}
 
-	public void setFile(File file) {
+	public void setFile(Blob file) {
 		this.file = file;
 	}
 	

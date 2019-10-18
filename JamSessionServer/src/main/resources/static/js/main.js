@@ -23,6 +23,12 @@ var colors = [
 function connect(event) {
   username = nameInput.val().trim();
   Cookies.set('name', username);
+  //das ist wichtig, dass hier der session name in den cookie gesetzt wird
+  Cookies.set('sessionId', roomInput.val());
+  Cookies.set('name', username);
+  //das passwort hier muss dann beim Erstellen der Session eingegeben werden und hier gehasht werden
+  passwordHash = 'temp';
+  Cookies.set('sessionPasswordHash', passwordHash);
   if (username) {
     usernamePage.classList.add('hidden');
     chatPage.classList.remove('hidden');
@@ -39,11 +45,6 @@ function connect(event) {
 // Leave the current session and enter a new one.
 function enterSession(newSessionId) {
   sessionId = newSessionId;
-  //das ist wichtig, dass hier der session name in den cookie gesetzt wird
-  Cookies.set('sessionId', sessionId);
-  //das passwort hier muss dann beim Erstellen der Session eingegeben werden und hier gehasht werden
-  passwordHash = 'temp';
-  Cookies.set('sessionPasswordHash', passwordHash);
   roomIdDisplay.textContent = sessionId;
   topic = `/app/jamsession/${newSessionId}`;
 

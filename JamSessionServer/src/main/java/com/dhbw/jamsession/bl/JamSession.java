@@ -4,6 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioFormat.Encoding;
+import javax.sound.sampled.AudioInputStream;
+
 import com.dhbw.jamsession.exception.JamSessionException;
 import com.dhbw.jamsession.pl.SoundFile;
 import com.dhbw.jamsession.pl.SoundFileId;
@@ -79,6 +83,10 @@ public class JamSession {
 
 	public void setSessionName(String sessionName) {
 		this.sessionName = sessionName;
+	}
+	
+	public int getSessionPlayerSize() {
+		return players.size();
 	}
 	
 	public boolean hasPlayer(String name) {
@@ -172,10 +180,12 @@ public class JamSession {
 		this.passwordhash = passwordhash;
 	}
 
-	public List<File> getSoundFilesForClient() {
-		List<File> files = new ArrayList<>();
+	public List<AudioInputStream> getSoundFilesForClient() {
+		List<AudioInputStream> files = new ArrayList<>();
+        AudioFormat audioFormat = new AudioFormat(Encoding.ULAW, 48000, 16, 1, frameSize, 50, true);
 		for(SoundFile sound:soundFiles) {
-			files.add(sound.getFile());
+			AudioInputStream stream = new AudioInputStream(sound.getFile().getBinaryStream(), audioFormat, length);
+			files.add(stream);
 		}
 		return files;
 	}

@@ -40,8 +40,8 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor{
 			ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
 			HttpSession session = servletRequest.getServletRequest().getSession();
 			attributes.put("sessionId", session.getId());
-			
 			HttpServletRequest servletRequest2 = servletRequest.getServletRequest();
+			System.out.println(servletRequest2.toString());
 			Cookie token1 = WebUtils.getCookie(servletRequest2, "sessionId");
 			Cookie token2 = WebUtils.getCookie(servletRequest2, "name");
 			Cookie token3 = WebUtils.getCookie(servletRequest2, "sessionPasswordHash");
