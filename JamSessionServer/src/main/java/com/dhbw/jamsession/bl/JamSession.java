@@ -184,19 +184,18 @@ public class JamSession implements Serializable {
 		this.passwordhash = passwordhash;
 	}
 
-	public Map<String, byte[]> getSoundFilesForClient() {
-		Map<String, byte[]> map = new HashMap<String, byte[]>();
+	public List<SoundHttpEntity> getSoundFilesForClient() {
+		List<SoundHttpEntity> list = new ArrayList<SoundHttpEntity>();
 		for (SoundFile sound : soundFiles) {
 			try {
-				map.put(sound.getId().getInstrumentType().name() + "-" + sound.getId().getPitchType().name() + "-"
-						+ sound.getId().getEffect().name(),
-						sound.getFile().getBytes(1, (int) sound.getFile().length()));
+				list.add(new SoundHttpEntity(sound.getId(), sound.getFile().getBytes(1, (int) sound.getFile().length())));
+
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return map;
+		return list;
 		// return files;
 	}
 }

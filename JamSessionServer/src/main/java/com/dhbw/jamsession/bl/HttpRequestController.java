@@ -15,7 +15,10 @@ import com.dhbw.jamsession.exception.JamSessionException;
 import com.dhbw.jamsession.pl.EnumEffectType;
 import com.dhbw.jamsession.pl.EnumInstrumentType;
 import com.dhbw.jamsession.pl.EnumPitchType;
+import com.dhbw.jamsession.pl.SoundFile;
 import com.dhbw.jamsession.pl.SoundFileId;
+import com.dhbw.jamsession.sl.ServiceManager;
+import com.dhbw.jamsession.sl.SoundService;
 
 import io.swagger.annotations.ApiOperation;
 
@@ -26,7 +29,7 @@ public class HttpRequestController {
 	//returns all soundfiles for a JamSession
 	@ApiOperation(value = "returns all soundfiles for a JamSession")
 	@GetMapping("/jamSessionSounds")
-	public Map<String, byte[]> getSessionSoundFiles(@RequestParam String jamSessionName, @RequestParam String player) {
+	public List<SoundHttpEntity> getSessionSoundFiles(@RequestParam String jamSessionName, @RequestParam String player) {
 		JamSession session = JamSession.getJamSessionByName(jamSessionName);
 		if(session.hasPlayer(player)) {
 			return session.getSoundFilesForClient();
