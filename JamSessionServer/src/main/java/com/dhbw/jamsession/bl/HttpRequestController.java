@@ -1,9 +1,17 @@
 package com.dhbw.jamsession.bl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,17 +31,29 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 public class HttpRequestController {
 
-	//returns all soundfiles for a JamSession
-	@ApiOperation(value = "returns all soundfiles for a JamSession")
-	@GetMapping("/jamSessionSounds")
-	public Map<String, byte[]> getSessionSoundFiles(@RequestParam String jamSessionName, @RequestParam String player) {
+	//returns one soundfile by id
+	@ApiOperation(value = "returns one soundfile by id")
+	@GetMapping("/jamSessionSoundFiles")
+	public ResponseEntity<Resource> getSoundFile(@RequestParam EnumInstrumentType instrumentType,@RequestParam EnumPitchType pitchType,@RequestParam EnumEffectType effectType) {
+		InputStreamResource output = new InputStreamResource(JamSession.getSound(instrumentType,pitchType,effectType));
+		return ResponseEntity.ok()
+				.headers(new HttpHeaders())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(output);
+	}
+	
+	//returns all sound id's for a JamSession
+	@ApiOperation(value = "returns all sound id's for a JamSession")
+	@GetMapping("/jamSessionSoundsIds")
+	public ResponseEntity<List<SoundFileId>> getSessionSoundIds(@RequestParam String jamSessionName, @RequestParam String player) {
 		JamSession session = JamSession.getJamSessionByName(jamSessionName);
 		if(session.hasPlayer(player)) {
-			return session.getSoundFilesForClient();
+			return new ResponseEntity<List<SoundFileId>>(session.getSoundIds(),HttpStatus.OK);
 		} else {
 			throw new JamSessionException("This player is not in this JamSession!");
 		}
 	}
+
 	
 	//adds sounds to a player in a JamSession
 	@ApiOperation(value = "adds sounds to a player in a JamSession")

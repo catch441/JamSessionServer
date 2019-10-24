@@ -1,13 +1,17 @@
 package com.dhbw.jamsession.bl;
 
+import static org.hamcrest.CoreMatchers.nullValue;
+
+import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.dhbw.jamsession.exception.JamSessionException;
+import com.dhbw.jamsession.pl.EnumEffectType;
+import com.dhbw.jamsession.pl.EnumInstrumentType;
+import com.dhbw.jamsession.pl.EnumPitchType;
 import com.dhbw.jamsession.pl.SoundFile;
 import com.dhbw.jamsession.pl.SoundFileId;
 import com.dhbw.jamsession.sl.ServiceManager;
@@ -65,6 +69,16 @@ public class JamSession implements Serializable {
 
 	public static List<JamSession> getJamSessions() {
 		return jamSessions;
+	}
+	
+	public static InputStream getSound(EnumInstrumentType instrumentType,EnumPitchType pitchType,EnumEffectType effectType) {
+		try {
+			return ServiceManager.getService(SoundService.class).getSoundById(instrumentType,
+					pitchType, effectType).getFile().getBinaryStream();
+		} catch (SQLException e) {
+			return null;
+		}
+		
 	}
 
 	private String sessionName;
@@ -183,20 +197,12 @@ public class JamSession implements Serializable {
 	public void setPasswordhash(String passwordhash) {
 		this.passwordhash = passwordhash;
 	}
-
-	public Map<String, byte[]> getSoundFilesForClient() {
-		Map<String, byte[]> map = new HashMap<String, byte[]>();
+	
+	public List<SoundFileId> getSoundIds() {
+		List<SoundFileId> list = new ArrayList<>();
 		for (SoundFile sound : soundFiles) {
-			try {
-				map.put(sound.getId().getInstrumentType().name() + "-" + sound.getId().getPitchType().name() + "-"
-						+ sound.getId().getEffect().name(),
-						sound.getFile().getBytes(1, (int) sound.getFile().length()));
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			list.add(sound.getId());
 		}
-		return map;
-		// return files;
+		return list;
 	}
 }
