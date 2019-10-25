@@ -1,5 +1,6 @@
 package com.dhbw.jamsession.bl;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -7,7 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.dhbw.jamsession.exception.JamSessionException;
+import com.dhbw.jamsession.pl.EnumEffectType;
+import com.dhbw.jamsession.pl.EnumInstrumentType;
+import com.dhbw.jamsession.pl.EnumPitchType;
 import com.dhbw.jamsession.pl.SoundFile;
 import com.dhbw.jamsession.pl.SoundFileId;
 import com.dhbw.jamsession.sl.ServiceManager;
@@ -65,6 +71,16 @@ public class JamSession implements Serializable {
 
 	public static List<JamSession> getJamSessions() {
 		return jamSessions;
+	}
+	
+	public static InputStream getSound(EnumInstrumentType instrumentType,
+			EnumPitchType pitchType, EnumEffectType effectType) {
+		try {
+			return ServiceManager.getService(SoundService.class).getSoundById(instrumentType,
+					pitchType, effectType).getFile().getBinaryStream();
+		} catch (SQLException e) {
+			throw new JamSessionException(e.getMessage());
+		}
 	}
 
 	private String sessionName;
@@ -182,20 +198,5 @@ public class JamSession implements Serializable {
 
 	public void setPasswordhash(String passwordhash) {
 		this.passwordhash = passwordhash;
-	}
-
-	public List<SoundHttpEntity> getSoundFilesForClient() {
-		List<SoundHttpEntity> list = new ArrayList<SoundHttpEntity>();
-		for (SoundFile sound : soundFiles) {
-			try {
-				list.add(new SoundHttpEntity(sound.getId(), sound.getFile().getBytes(1, (int) sound.getFile().length())));
-
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return list;
-		// return files;
 	}
 }

@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,61 +30,60 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 public class HttpRequestController {
 
-	//returns all soundfiles for a JamSession
-	@ApiOperation(value = "returns all soundfiles for a JamSession")
-	@GetMapping("/jamSessionSounds")
-	public List<SoundHttpEntity> getSessionSoundFiles(@RequestParam String jamSessionName, @RequestParam String player) {
-		JamSession session = JamSession.getJamSessionByName(jamSessionName);
-		if(session.hasPlayer(player)) {
-			return session.getSoundFilesForClient();
-		} else {
-			throw new JamSessionException("This player is not in this JamSession!");
-		}
+	// returns all soundfiles for a JamSession
+	@ApiOperation(value = "returns one soundfile by id")
+	@GetMapping("/jamSessionSoundFiles")
+	public ResponseEntity<InputStreamResource> getSessionSoundFile(@RequestParam EnumInstrumentType instrumentType,
+			@RequestParam EnumPitchType pitchType, @RequestParam EnumEffectType effectType) {
+		InputStreamResource resource = new InputStreamResource(JamSession.getSound(instrumentType,pitchType,effectType));
+		return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("audio/wav"))
+                .body(resource);
 	}
-	
-	//adds sounds to a player in a JamSession
+
+	// adds sounds to a player in a JamSession
 	@ApiOperation(value = "adds sounds to a player in a JamSession")
 	@PostMapping("/jamSessionSounds")
-	public void addSoundsToPlayer(@RequestParam String jamSessionName, @RequestParam String player,@RequestBody List<SoundFileId> sounds) {
+	public void addSoundsToPlayer(@RequestParam String jamSessionName, @RequestParam String player,
+			@RequestBody List<SoundFileId> sounds) {
 		JamSession session = JamSession.getJamSessionByName(jamSessionName);
-		if(session.hasPlayer(player)) {
+		if (session.hasPlayer(player)) {
 			session.addSoundsToSessionPlayer(player, sounds);
 		} else {
 			throw new JamSessionException("This player is not in this JamSession!");
 		}
 	}
-	
-	//returns all active session names
+
+	// returns all active session names
 	@ApiOperation(value = "returns all active session names")
 	@GetMapping("/jamSessions")
 	public List<String> getAllSessions() {
 		List<String> list = new ArrayList<String>();
-		for(JamSession session:JamSession.getJamSessions()) {
+		for (JamSession session : JamSession.getJamSessions()) {
 			list.add(session.getSessionName());
 		}
 		return list;
 	}
-	
-	//returns all active session names
+
+	// returns all active session names
 	@ApiOperation(value = "returns all available effects")
 	@GetMapping("/effects")
 	public EnumEffectType[] getAllEffects() {
 		return EnumEffectType.values();
 	}
-	
-	//returns all available instruments
+
+	// returns all available instruments
 	@ApiOperation(value = "returns all available instruments")
 	@GetMapping("/instruments")
 	public EnumInstrumentType[] getAllInstruments() {
 		return EnumInstrumentType.values();
 	}
-	
-	//returns all available pitches
+
+	// returns all available pitches
 	@ApiOperation(value = "returns all available pitches")
 	@GetMapping("/pitches")
 	public EnumPitchType[] getAllPitches() {
 		return EnumPitchType.values();
 	}
-		
-	
+
 }
