@@ -69,14 +69,14 @@ public class JamSession implements Serializable {
 		return jamSessions;
 	}
 	
-	public static InputStream getSound(EnumInstrumentType instrumentType,EnumPitchType pitchType,EnumEffectType effectType) {
+	public static InputStream getSound(EnumInstrumentType instrumentType,
+			EnumPitchType pitchType, EnumEffectType effectType) {
 		try {
 			return ServiceManager.getService(SoundService.class).getSoundById(instrumentType,
 					pitchType, effectType).getFile().getBinaryStream();
 		} catch (SQLException e) {
-			return null;
+			throw new JamSessionException(e.getMessage());
 		}
-		
 	}
 
 	private String sessionName;
