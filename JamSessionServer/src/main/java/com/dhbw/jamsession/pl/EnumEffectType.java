@@ -50,7 +50,9 @@ public enum EnumEffectType {
 	FM(45),
 	LOFI(46),
 	ROTOTOM(47),
-	SHORT(48);
+	SHORT(48),
+	
+	NONE(49);
 	
 
 	int value;

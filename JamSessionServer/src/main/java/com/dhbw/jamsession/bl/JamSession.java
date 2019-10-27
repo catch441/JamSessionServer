@@ -1,7 +1,5 @@
 package com.dhbw.jamsession.bl;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;

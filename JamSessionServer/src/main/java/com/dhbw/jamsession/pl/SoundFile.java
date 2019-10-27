@@ -16,6 +16,11 @@ public class SoundFile {
 
 	@Column(name = "file")
 	private Blob file;
+	
+	public SoundFile(SoundFileId id,Blob file) {
+		setId(id);
+		setFile(file);
+	}
 
 	public SoundFileId getId() {
 		return id;
