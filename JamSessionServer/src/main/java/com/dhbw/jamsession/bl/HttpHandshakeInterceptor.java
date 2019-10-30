@@ -4,7 +4,6 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpRequest;
@@ -39,13 +38,13 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor{
 		if (request instanceof ServletServerHttpRequest) {
 			
 			ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
-			HttpSession session = servletRequest.getServletRequest().getSession();
-			attributes.put("sessionId", session.getId());
 			HttpServletRequest servletRequest2 = servletRequest.getServletRequest();
 			System.out.println(servletRequest2.toString());
 			Cookie token1 = WebUtils.getCookie(servletRequest2, "sessionId");
 			Cookie token2 = WebUtils.getCookie(servletRequest2, "name");
 			Cookie token3 = WebUtils.getCookie(servletRequest2, "sessionPasswordHash");
+			attributes.put("sessionId", token1.getValue());
+			attributes.put("username", token2.getValue());
 			if(JamSession.sessionExists(token1.getValue())) {
 				JamSession jamSession = JamSession.getJamSessionByName(token1.getValue());
 				if(!jamSession.getPasswordhash().equals(token3.getValue()) || jamSession.hasPlayer(token2.getValue())) {

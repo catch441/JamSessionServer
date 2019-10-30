@@ -27,6 +27,7 @@ public class WebSocketEventListener {
 
   @EventListener
   public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
+	  
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
     String username = (String) headerAccessor.getSessionAttributes().get("username");
     String sessionId = (String) headerAccessor.getSessionAttributes().get("sessionId");
@@ -35,7 +36,7 @@ public class WebSocketEventListener {
       JamSession session = JamSession.getJamSessionByName(sessionId);
       session.removePlayer(username);
       if(session.getSessionPlayerSize() == 0) {
-    	  JamSession.getJamSessions().remove(session);
+    	  JamSession.deleteJamSession(session);;
       } else {
     	  ChatMessage chatMessage = new ChatMessage();
           chatMessage.setType(EnumMessageType.LEAVE);

@@ -33,18 +33,8 @@ public class JamSession implements Serializable {
 		jamSessions.add(session);
 	}
 
-	public static void deleteJamSession(String name, String passwordhash, String leader) {
-		JamSession jamSession = null;
-		for (JamSession session : jamSessions) {
-			if (session.getSessionName().equals(name) && session.getPlayer(leader).isLeader()) {
-				jamSession = session;
-			}
-		}
-		if (jamSession != null) {
-			jamSessions.remove(jamSession);
-		} else {
-			throw new JamSessionException("Error on deleting this jamSession!");
-		}
+	public static void deleteJamSession(JamSession session) {
+		jamSessions.remove(session);
 	}
 
 	public static boolean sessionExists(String name) {
@@ -89,7 +79,7 @@ public class JamSession implements Serializable {
 		soundFiles = new ArrayList<>();
 		setSessionName(sessionName);
 		setPasswordhash(passwordhash);
-		players.add(new Player(leader, true));
+		players.add(new Player(leader));
 	}
 
 	public String getSessionName() {
@@ -119,7 +109,7 @@ public class JamSession implements Serializable {
 				throw new JamSessionException("This player is already in this session!");
 			}
 		}
-		players.add(new Player(name, false));
+		players.add(new Player(name));
 	}
 
 	public Player getPlayer(String name) {

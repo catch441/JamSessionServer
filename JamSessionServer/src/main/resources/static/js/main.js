@@ -25,7 +25,6 @@ function connect(event) {
   Cookies.set('name', username);
   //das ist wichtig, dass hier der session name in den cookie gesetzt wird
   Cookies.set('sessionId', roomInput.val());
-  Cookies.set('name', username);
   //das passwort hier muss dann beim Erstellen der Session eingegeben werden und hier gehasht werden
   passwordHash = 'temp';
   Cookies.set('sessionPasswordHash', passwordHash);

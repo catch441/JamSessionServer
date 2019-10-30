@@ -9,12 +9,10 @@ public class Player {
 
 	private List<SoundFileId> sounds;
 	private String name;
-	private boolean isLeader;
 	
-	public Player(String name,boolean isLeader) {
+	public Player(String name) {
 		sounds = new ArrayList<SoundFileId>();
 		setName(name);
-		setLeader(isLeader);
 	}
 
 	public String getName() {
@@ -23,14 +21,6 @@ public class Player {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public boolean isLeader() {
-		return isLeader;
-	}
-
-	public void setLeader(boolean isLeader) {
-		this.isLeader = isLeader;
 	}
 
 	public List<SoundFileId> getSounds() {

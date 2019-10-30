@@ -13,8 +13,6 @@ import com.dhbw.jamsession.bl.HttpHandshakeInterceptor;
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        //registry.addEndpoint("/ws").setAllowedOrigins("*")
-        //.withSockJS();
         registry.addEndpoint("/ws").addInterceptors(new HttpHandshakeInterceptor()).setAllowedOrigins("*");
     }
 
