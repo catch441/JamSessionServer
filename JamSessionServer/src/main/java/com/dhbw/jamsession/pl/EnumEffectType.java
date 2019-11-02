@@ -51,8 +51,9 @@ public enum EnumEffectType {
 	LOFI(46),
 	ROTOTOM(47),
 	SHORT(48),
+	THUMP(49),
 	
-	NONE(49);
+	NONE(50);
 	
 
 	int value;

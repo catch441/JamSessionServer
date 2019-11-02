@@ -66,7 +66,7 @@ public enum EnumPitchType {
 	CRASH(61),
 	HITHAT(62),
 	KICK(63),
-	SNAER(64),
+	SNARE(64),
 	TOM(65);
 	
 	int value;

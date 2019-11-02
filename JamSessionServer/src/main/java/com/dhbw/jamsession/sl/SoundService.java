@@ -1,5 +1,6 @@
 package com.dhbw.jamsession.sl;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,15 @@ public class SoundService {
 		} else {
 			throw new NonResultException("No soundfile found!");
 		}
+	}
+	
+	public ArrayList<String> getAllEffectsByInstrument(EnumInstrumentType instrumentType) {
+		ArrayList<String> list = repo.getAllEffectsByInstrument(instrumentType);
+		return list;
+	}
+	
+	public ArrayList<String> getAllEffectsForDrumByInstrumentAndPitch(EnumPitchType pitchType) {
+		ArrayList<String> list = repo.getAllEffectsByInstrumentAndPitch(EnumInstrumentType.DRUM,pitchType);
+		return list;
 	}
 }

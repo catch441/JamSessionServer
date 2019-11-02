@@ -29,12 +29,12 @@ public class HttpRequestController {
 	//returns all sound id's for a JamSession
 	@ApiOperation(value = "returns all sound id's for a JamSession")
 	@GetMapping("/jamSessionSoundsIds")
-	public ResponseEntity<List<SoundFileId>> getSessionSoundIds(@RequestParam String jamSessionName, @RequestParam String player) {
+	public ResponseEntity<List<SoundFileId>> getSessionSoundIds(@RequestParam String jamSessionName, @RequestParam String password) {
 		JamSession session = JamSession.getJamSessionByName(jamSessionName);
-		if(session.hasPlayer(player)) {
+		if(session.getPasswordhash().equals(password)) {
 			return new ResponseEntity<List<SoundFileId>>(session.getSoundIds(),HttpStatus.OK);
 		} else {
-			throw new JamSessionException("This player is not in this JamSession!");
+			throw new JamSessionException("Wrong password!");
 		}
 	}
 
@@ -52,13 +52,15 @@ public class HttpRequestController {
 	// adds sounds to a player in a JamSession
 	@ApiOperation(value = "adds sounds to a player in a JamSession")
 	@PostMapping("/jamSessionSounds")
-	public void addSoundsToPlayer(@RequestParam String jamSessionName, @RequestParam String player,
-			@RequestBody List<SoundFileId> sounds) {
+	public void addSoundsToPlayer(@RequestParam String jamSessionName, @RequestParam String password, @RequestParam String player,
+			@RequestBody ArrayList<SoundFileId> sounds) {
 		JamSession session = JamSession.getJamSessionByName(jamSessionName);
-		if (session.hasPlayer(player)) {
-			session.addSoundsToSessionPlayer(player, sounds);
-		} else {
+		if (!session.hasPlayer(player)) {
 			throw new JamSessionException("This player is not in this JamSession!");
+		} else if(!password.equals(session.getPasswordhash())) {
+			throw new JamSessionException("Wrong password!");
+		} else {
+			session.addSoundsToSessionPlayer(player, sounds);
 		}
 	}
 
@@ -73,12 +75,20 @@ public class HttpRequestController {
 		return list;
 	}
 
-	// returns all active session names
-	@ApiOperation(value = "returns all available effects")
+	// returns all available effects for a instrument
+	@ApiOperation(value = "returns all available effects for a instrument")
 	@GetMapping("/effects")
-	public EnumEffectType[] getAllEffects() {
-		return EnumEffectType.values();
+	public ArrayList<String> getAllEffectsByInstrument(@RequestParam EnumInstrumentType instrumentType) {
+		return JamSession.getAllEffectsByInstrument(instrumentType);
 	}
+	
+	// returns all available effects for a drum pitch
+	@ApiOperation(value = "returns all available effects for a drum pitch")
+	@GetMapping("/drumEffects")
+	public ArrayList<String> getAllEffectsForDrumByInstrumentAndPitch(@RequestParam EnumPitchType pitchType) {
+		return JamSession.getAllEffectsForDrumByInstrumentAndPitch(pitchType);
+	}
+	
 
 	// returns all available instruments
 	@ApiOperation(value = "returns all available instruments")

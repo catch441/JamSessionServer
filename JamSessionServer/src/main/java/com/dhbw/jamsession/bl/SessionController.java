@@ -27,19 +27,4 @@ public class SessionController {
 	  public void sendSoundMessage(@DestinationVariable String sessionId, @Payload SoundMessage soundMessage) {
 	    messagingTemplate.convertAndSend("/jamsession/" + sessionId, soundMessage);
 	  }
-
-	  @MessageMapping("/jamsession/{sessionId}/addUser")
-	  public void addUser(@DestinationVariable String sessionId, @Payload ChatMessage chatMessage,
-	      SimpMessageHeaderAccessor headerAccessor) {
-	    String currentRoomId = (String) headerAccessor.getSessionAttributes().put("sessionId", sessionId);
-	    if (currentRoomId != null) {
-	      ChatMessage leaveMessage = new ChatMessage();
-	      leaveMessage.setType(EnumMessageType.LEAVE);
-	      leaveMessage.setSender(chatMessage.getSender());
-	      messagingTemplate.convertAndSend("/jamsession/" + currentRoomId, leaveMessage);
-	    }
-	    headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-	    messagingTemplate.convertAndSend("/jamsession/" + sessionId, chatMessage);
-	  }
-
 }

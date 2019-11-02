@@ -68,6 +68,14 @@ public class JamSession implements Serializable {
 			throw new JamSessionException(e.getMessage());
 		}
 	}
+	
+	public static ArrayList<String> getAllEffectsByInstrument(EnumInstrumentType instrumentType) {
+		return ServiceManager.getService(SoundService.class).getAllEffectsByInstrument(instrumentType);
+	}
+	
+	public static ArrayList<String> getAllEffectsForDrumByInstrumentAndPitch(EnumPitchType pitchType) {
+		return ServiceManager.getService(SoundService.class).getAllEffectsForDrumByInstrumentAndPitch(pitchType);
+	}
 
 	private String sessionName;
 	private String passwordhash;

@@ -10,8 +10,6 @@ public class SoundMessage {
 	private EnumPitchType tune;
 	private EnumEffectType effect;
 	private EnumMessageType type;
-	private boolean play;
-	private int id;
 	
 	public SoundMessage() {
 		
@@ -41,27 +39,11 @@ public class SoundMessage {
 		this.type = type;
 	}
 
-	public boolean isPlay() {
-		return play;
-	}
-
-	public void setPlay(boolean play) {
-		this.play = play;
-	}
-
 	public EnumEffectType getEffect() {
 		return effect;
 	}
 
 	public void setEffect(EnumEffectType effect) {
 		this.effect = effect;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 }
