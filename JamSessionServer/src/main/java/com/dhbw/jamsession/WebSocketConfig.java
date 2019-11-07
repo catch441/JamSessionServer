@@ -17,7 +17,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/jamsession");
+        registry.setApplicationDestinationPrefixes("/app");
         registry.enableSimpleBroker("/jamsession");
     }
 }
