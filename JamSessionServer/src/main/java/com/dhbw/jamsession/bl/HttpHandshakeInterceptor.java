@@ -9,10 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 import org.springframework.web.util.WebUtils;
 
+@CrossOrigin
 public class HttpHandshakeInterceptor implements HandshakeInterceptor{
 
 	@Override
@@ -34,7 +36,7 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor{
 
 	@Override
 	public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
-			Map<String, Object> attributes) throws Exception {
+			Map<String, Object> attributes) {
 		if (request instanceof ServletServerHttpRequest) {
 			
 			ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;

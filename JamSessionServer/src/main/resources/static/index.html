@@ -1,47 +1,17 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <title>Chat Application</title>
-  <link rel="stylesheet" href="/css/main.css" />
-</head>
-<body>
-<noscript>
-  <h2>Sorry! Your browser doesn't support Javascript</h2>
-</noscript>
+  <meta charset="utf-8">
+  <title>Jam Session</title>
+  <base href="/">
 
-<div id="username-page">
-  <div class="username-page-container">
-    <h1 class="title">Enter a username and room ID</h1>
-    <form id="usernameForm" name="usernameForm">
-      <div class="form-group">
-        <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" />
-      </div>
-      <div class="form-group">
-        <input type="text" id="room-id" value="lobby" placeholder="Room ID" autocomplete="off" class="form-control" />
-      </div>
-      <div class="form-group">
-        <button type="submit" class="accent username-submit">Start Chatting</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div id="chat-page" class="hidden">
-  <div class="chat-container">
-    <div class="chat-header">
-      <h2>Chatroom [<span id="room-id-display"></span>]</h2>
-    </div>
-    <div class="connecting">
-      Connecting...
-    </div>
-  </div>
-</div>
-
-<script src="/webjars/jquery/jquery.min.js"></script>
-<script src="/webjars/sockjs-client/sockjs.min.js"></script>
-<script src="/webjars/stomp-websocket/stomp.min.js"></script>
-<script src="/webjars/js-cookie/js.cookie.js"></script>
-<script src="/js/main.js"></script>
-</body>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="styles.d22cf282a6db0913c84e.css"></head>
+<body class="main">
+  <app-root></app-root>
+<script type="text/javascript" src="runtime.26209474bfa8dc87a77c.js"></script><script type="text/javascript" src="es2015-polyfills.bda95d5896422d031328.js" nomodule></script><script type="text/javascript" src="polyfills.8bbb231b43165d65d357.js"></script><script type="text/javascript" src="main.2945d24f2cdff9cca4bd.js"></script></body>
 </html>

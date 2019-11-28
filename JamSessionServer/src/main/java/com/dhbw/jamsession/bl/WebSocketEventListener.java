@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-@CrossOrigin
+
 @Component
 public class WebSocketEventListener {
 
